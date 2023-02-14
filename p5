@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RandomNumberGenerators
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Generate random numbers using the Linear Congruential Generator (LCG) algorithm
+            LCG lcg = new LCG();
+            List<long> lcgNumbers = new List<long>();
+            for (int i = 0; i < 100000; i++)
+            {
+                lcgNumbers.Add(lcg.Next(0, 10));
+            }
+
+            // Calculate how many times each number was chosen
+            Dictionary<long, int> lcgCounts = new Dictionary<long, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                lcgCounts[i] = lcgNumbers.Count(n => n == i);
+            }
+
+            // Print the results on the screen
+            Console.WriteLine("LCG Results:");
+            foreach (var kvp in lcgCounts)
+            {
+                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            }
+
+            // Generate random numbers using the Xorshift algorithm
+            Xorshift xorshift = new Xorshift();
+            List<long> xorshiftNumbers = new List<long>();
+            for (int i = 0; i < 100000; i++)
+            {
+                xorshiftNumbers.Add(xorshift.Next(0, 10));
+            }
+
+            // Calculate how many times each number was chosen
+            Dictionary<long, int> xorshiftCounts = new Dictionary<long, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                xorshiftCounts[i] = xorshiftNumbers.Count(n => n == i);
+            }
+
+            // Print the results on the screen
+            Console.WriteLine("Xorshift Results:");
+            foreach (var kvp in xorshiftCounts)
+            {
+                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            }
+
+            // Generate random numbers using the built-in Random class
+            Random random = new Random();
+            List<long> randomNumbers = new List<long>();
+            for (int i = 0; i < 100000; i++)
+            {
+                randomNumbers.Add((long)(random.NextDouble() * 10));
+            }
+
+            // Calculate how many times each number was chosen
+            Dictionary<long, int> randomCounts = new Dictionary<long, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                randomCounts[i] = randomNumbers.Count(n => n == i);
+            }
+
+            // Print the results on the screen
+            Console.WriteLine("Random Class Results:");
+            foreach (var kvp in randomCounts)
+            {
+                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            }
+
+            Console.ReadLine();
+        }
+
+        static double CustomDistribution(double x)
+        {
+            // Implement your custom distribution function here
+            // For example, you can use a sigmoid function
+            return 1 / (1 + Math.Exp(-x));
+        }
+    }
+
+    public class LCG
+    {
+        private long a = 1664525;
+        private long c = 1013904223;
+        private long m = (long)Math.Pow(2, 32);
+        private long state;
+
+        public LCG(long seed = 0)
+        {
+            state = seed;
+        }
+
+        public long Next(long minValue, long maxValue)
+        {
+            state = (a * state + c) % m;
+            return minValue + (state % (maxValue - minValue));
+        }
+    }
+
+    public class Xorshift
+   
